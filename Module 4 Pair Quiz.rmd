@@ -4,6 +4,7 @@ author: "Shan Mikel Villareal"
 date: "7/28/2021"
 output: html_document
 ---
+# Question 1
 
 ```{r}
 SoundPressure <- c(60, 63, 65, 70, 70, 70, 80, 90, 80, 80, 85, 89, 90, 90, 90, 90, 94, 100, 100, 100)
@@ -16,3 +17,39 @@ coef(slrm)
 abline(slrm)
 plot(slrm)
 ```
+
+
+# Question 2
+
+```{r}
+optics.data <- data.frame(
+  Brightness = c(54, 61, 65, 100, 100, 100, 50, 57, 54),
+  Contrast = c(56, 80, 70, 50, 65, 80, 25, 35, 26),
+  UsefulRange = c(96, 50, 50, 112, 96, 80, 155, 144, 255)
+)
+```
+
+Fitting a multiple linear regression model is by using:
+```{r}
+multreg <- lm(UsefulRange ~ Brightness + Contrast ,data=optics.data)
+summary(multreg)
+coeffs = coefficients(multreg)
+```
+
+From the above, a fitting model for the data is
+
+y= `r coeffs[1]` + `r coeffs[2]`x1 `r coeffs[3]` .
+
+
+To estimate $\sigma^2$, we will use the formula:
+$$
+\dfrac{\sum_{i=1}^{n} e^i^2}{n-p}
+$$
+
+To compute that, the code will be used is:
+```{r}
+variance = (sum(multreg$residuals^2))/multreg$df.residual; variance
+```
+
+The standard errors of the regression coefficients are
+
