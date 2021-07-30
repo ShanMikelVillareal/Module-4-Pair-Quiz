@@ -21,6 +21,8 @@ plot(slrm)
 
 # Question 2
 
+Input the raw data into a data frame as follows:
+
 ```{r}
 optics.data <- data.frame(
   Brightness = c(54, 61, 65, 100, 100, 100, 50, 57, 54),
@@ -29,27 +31,84 @@ optics.data <- data.frame(
 )
 ```
 
-Fitting a multiple linear regression model is by using:
-```{r}
+Note that there are two variables and thus a multiple linear regression in the form $Y=\hat\beta_0 + \hat\beta_1x_1 + \hat\beta_2 x_2$ can fit the data. In this context, the variables $Y$ represnts for the useful range, $x_1$ represent the brightness, and $x_2$ represent the contrast.
+
+Fit a multiple linear regression model by using:
+
+```{r echo=1:2}
 multreg <- lm(UsefulRange ~ Brightness + Contrast ,data=optics.data)
 summary(multreg)
 coeffs = coefficients(multreg)
 ```
 
-From the above, a fitting model for the data is
+From the results above, a fitting model for the data is **$Y=$ `r coeffs[1]` + `r coeffs[2]`$x_1$ `r coeffs[3]` $x_2$.**
 
-y= `r coeffs[1]` + `r coeffs[2]`x1 `r coeffs[3]` .
-
+***
 
 To estimate $\sigma^2$, we will use the formula:
 $$
-\dfrac{\sum_{i=1}^{n} e^i^2}{n-p}
+\displaystyle \dfrac{\Sigma_{i=1}^{n} e_i^2}{n-p}
 $$
 
 To compute that, the code will be used is:
 ```{r}
-variance = (sum(multreg$residuals^2))/multreg$df.residual; variance
+variance = (deviance(multreg))/multreg$df.residual; variance
+```
+**Thus, the estimated value of $\sigma^2$ is `r variance`**
+
+***
+
+```{r include=FALSE}
+secoeff = coef(summary(multreg))[, "Std. Error"]
 ```
 
-The standard errors of the regression coefficients are
+
+The standard errors of the regression coefficients are found in the summary table above under the `Std. Error` column. Specifically, the standard errors for each coefficient are:
+
+- $se(\hat{\beta_0})$ = `r secoeff[1]`
+- $se(\hat{\beta_1})$ = `r secoeff[2]`
+- $se(\hat{\beta_2})$ = `r secoeff[3]`
+
+***
+
+To predict the useful range with brightness of 80% and contrast of 75%, the code chunk will be utilized:
+```{r}
+newdata = data.frame(Brightness=80, Contrast=75);
+predict(multreg, newdata)
+```
+**Thus, using the fitted multiple linear model, the predicted value obtained is `r predict(multreg, newdata)`.**
+
+***
+
+To test the significance of regression with $\alpha=0.05$, the hypothesis are:
+
+- $H_0: \beta_1 = \beta_2 = 0$
+- $H_1: \beta_j \neq 0$ for at least one $j$
+
+The test statistic is $f_0=$ `r summary(multreg)$fstatistic[1]`. 
+Since $f_0 >f_{0.05,2,6}=$ `r qf(0.05, 2, 6, lower.tail=F)`, the null hypothesis is rejected on $\alpha=0.05$ with a ***P*-value of `r pf(summary(multreg)$fstatistic[1],2,6, lower.tail=F)`.**
+
+**In conclusion, at least one of the regressor variables, either brightness or contrast, or both, contribute significantly to the fitted model.**
+
+***
+
+The three pairs of hypotheses cosntructed for each regression coefficient $\beta_1,\beta_2,\beta_3$ are as follows:
+
+- $H_0: \beta_0 =0, \beta_1 =0, \beta_2 =0$
+- $H_1: \beta_0 \neq0, \beta_1 \neq0, \beta_2 \neq0$
+
+
+```{r include=FALSE}
+tcoeff = coef(summary(multreg))[, "t value"]
+```
+
+The test statistics for each regression coefficient are also shown in the summary table above under the `t value` column. Specifically, the test statistic of each coefficients are:
+
+- $t_{0, \beta0} = $ `r tcoeff[1]`
+- $t_{0, \beta1} = $ `r tcoeff[2]`
+- $t_{0, \beta2} = $ `r tcoeff[3]`
+
+The rejection region for all of the test statistic is $|t_0| > $ `r qt(0.025, 22, lower.tail=F)` with $\alpha=0.05$. 
+
+Since the test statistics $t_{0, \beta0}$ and $t_{0, \beta2}$ are found in the critical region, the hypotheses $\beta_0=0$ and $\beta_2=0$ are rejected. This concludes that the variable $x_2$, which is contrast in this context, contributes significantly to the model. However, the hypothesis $\beta_1=0$ fails to be rejected at $\alpha=0.05$. This implies that there is insufficient evidence to say that the variable $x_1$ or brightness contributes significantly to the model.
 
