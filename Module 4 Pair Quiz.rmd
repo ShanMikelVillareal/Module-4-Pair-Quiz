@@ -1,7 +1,7 @@
 ---
 title: "Module 4 Pair Quiz"
 author: "Dranreb James Cucio & Shan Mikel Villareal"
-date: "7/28/2021"
+date: "8/02/2021"
 output:
   prettydoc::html_pretty:
     theme: hpstr
@@ -65,7 +65,9 @@ But it can easily be solved by utilizing code chunks:
 var1 = (deviance(simreg))/simreg$df.residual; var1
 ```
 
-<div style="text-align: Justify"> C. Find the predicted mean rise in blood pressure level associated with a sound pressure level of 85 decibels.
+***
+
+<div style="text-align: Justify"> **C. Find the predicted mean rise in blood pressure level associated with a sound pressure level of 85 decibels.**
 
 To find the predicted mean rise in blood pressure level, the equation formed $Y=-10.1315377+0.1742939x$ will be used where, $x=85$. Although, code chunks can also be used. </div>
 
@@ -112,7 +114,7 @@ coeffsmult = coefficients(multreg)
 
 ***
 
-B. Estimate $\sigma^2$.
+**B. Estimate $\sigma^2$.**
 
 To estimate $\sigma^2$, we will use the formula: </div>
 
@@ -123,10 +125,10 @@ $$
 To compute that, the code will be used is:
 
 ```{r}
-variance = (deviance(multreg))/multreg$df.residual
+var2 = (deviance(multreg))/multreg$df.residual; var2
 ```
 
-**Thus, the estimated value of $\sigma^2$ is `r variance`**
+**Thus, the estimated value of $\sigma^2$ is `r var2`**
 
 ***
 
@@ -193,5 +195,6 @@ The rejection region for all of the test statistic is $|t_0|>$ `r qt(0.025, 22, 
 
 <div style="text-align: Justify"> Since the test statistics $t_{0, \beta0}$ and $t_{0, \beta2}$ are found in the critical region, the hypotheses $\beta_0=0$ and $\beta_2=0$ are rejected. This concludes that the variable $x_2$, which is contrast in this context, contributes significantly to the model. However, the hypothesis $\beta_1=0$ fails to be rejected at $\alpha=0.05$. This implies that there is insufficient evidence to say that the variable $x_1$ or brightness contributes significantly to the model. </div>
 
-##References
+## References
+
 - D. C. Montgomery and G. C. Runger, Applied statistics and probability for engineers. New York: Wiley, 2003.
